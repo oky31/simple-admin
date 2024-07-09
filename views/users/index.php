@@ -3,10 +3,10 @@ session_start();
 
 $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
 
-$urlLogin = $protocol . $_SERVER['HTTP_HOST'] .  "/views/Login/";
+$urlLogin = $protocol . $_SERVER['HTTP_HOST'] .  "/";
 
 if (!isset($_SESSION['user'])) {
-    return header('Location: http://localhost/web-porto/si-admin/views/Login/');
+    return header('Location: ' . $urlLogin);
 }
 
 ?>
@@ -44,7 +44,7 @@ if (!isset($_SESSION['user'])) {
                     </li>
                 </ul>
             </div>
-            <form class="d-flex">
+            <form class="d-flex" id="logout">
                 <button class="btn btn-primary" type="submit">Logout</button>
             </form>
         </div>
@@ -55,6 +55,32 @@ if (!isset($_SESSION['user'])) {
         </div>
         <h6 class="mt-4 mb-4 text-center text-success">Selamat Datang Di Halaman Users</h6>
     </div>
+
+
+
+    <script>
+        const Host = window.location.protocol + '//' + window.location.host;
+        const UrlLogout = Host + '/api/auth/logout.php';
+        const UrlLogin = Host + '/';
+
+        $(document).ready(function() {
+            $('#logout').on('submit', function(event) {
+                event.preventDefault();
+
+                $.ajax({
+                    url: UrlLogout,
+                    method: "POST",
+                    success: function(data) {
+                        window.location.href = UrlLogin; 
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        $('#message').html('<div class="alert alert-danger">' + err.responseJSON + '</div>');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
