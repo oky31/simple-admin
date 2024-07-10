@@ -16,10 +16,36 @@ class Users
     public $pekerjaan;
     public $posisi;
 
-    // Db connection
     public function __construct($db)
     {
         $this->conn = $db;
+    }
+
+    public function getUsers()
+    {
+        $sqlQuery = "SELECT id, nama_lengkap, email, password, foto, pekerjaan, posisi FROM " . $this->db_table . "";
+        $stmt = $this->conn->prepare($sqlQuery);         
+        $stmt->execute();
+        return $stmt;
+    }
+
+    public function getSingleUser()
+    {
+        $sqlQuery = "
+        SELECT id, nama_lengkap, email, password, foto, pekerjaan,posisi        
+        FROM " . $this->db_table . " WHERE id = ? LIMIT 0,1";
+
+        $stmt = $this->conn->prepare($sqlQuery);
+        $stmt->bindParam(1, $this->id);
+        $stmt->execute();
+        $dataRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        $this->nama_lengkap = $dataRow['nama_lengkap'];
+        $this->email        = $dataRow['email'];
+        $this->password     = $dataRow['password'];
+        $this->foto         = $dataRow['foto'];
+        $this->pekerjaan    = $dataRow['pekerjaan'];
+        $this->posisi       = $dataRow['posisi'];
     }
 
     public function prosesLogin()

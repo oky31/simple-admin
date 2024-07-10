@@ -11,6 +11,7 @@ if (!isset($_SESSION['user'])) {
 
 ?>
 
+
 <!doctype html>
 <html lang="en">
 
@@ -27,7 +28,6 @@ if (!isset($_SESSION['user'])) {
 </head>
 
 <body>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container-fluid">
             <a class="navbar-brand" href="#"></a>
@@ -37,10 +37,10 @@ if (!isset($_SESSION['user'])) {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/views/users">Users</a>
+                        <a class="nav-link" aria-current="page" href="/views/users">Users</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/views/skills">Rating</a>
+                        <a class="nav-link active" href="/views/skills">Skills</a>
                     </li>
                 </ul>
             </div>
@@ -50,15 +50,16 @@ if (!isset($_SESSION['user'])) {
         </div>
     </nav>
 
+
     <div class="container">
         <div id="message">
         </div>
 
-        <h1 class="mt-4 mb-4 text-center text-primary">USERS CRUD</h1>
+        <h1 class="mt-4 mb-4 text-center text-primary">Skills CRUD</h1>
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col col-sm-9">USERS</div>
+                    <div class="col col-sm-9">Skills</div>
                     <div class="col col-sm-3">
                         <button type="button" id="add_data" class="btn btn-success btn-sm float-end">Add</button>
                     </div>
@@ -69,11 +70,12 @@ if (!isset($_SESSION['user'])) {
                     <table class="table table-striped table-bordered" id="sample_data">
                         <thead>
                             <tr>
-                                <th>Nama Lengkap</th>
-                                <th>Email</th>
-                                <th>Pekerjaan</th>
-                                <th>Posisi</th>
-                                <th>Action</th>
+                                <th>Id </th>
+                                <th>User </th>
+                                <th>Skill Name</th>
+                                <th>Rating</th>
+                                <th>Description</th>
+                                <th>Action </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -85,12 +87,11 @@ if (!isset($_SESSION['user'])) {
     </div>
 
 
-
     <script>
         const Host = window.location.protocol + '//' + window.location.host;
         const UrlLogout = Host + '/api/auth/logout.php';
         const UrlLogin = Host + '/';
-        const UrlReadUser = Host + '/api/users/read.php';
+        const UrlReadSkills = Host + '/api/skills/read.php';
 
         $(document).ready(function() {
 
@@ -113,22 +114,26 @@ if (!isset($_SESSION['user'])) {
             });
         });
 
-        // Fungsi untuk memangil api list produk
+
+        // Fungsi untuk memangil api list skills 
         function showAll() {
             $.ajax({
                 type: "GET",
                 contentType: "application/json",
-                url: UrlReadUser,
+                url: UrlReadSkills,
                 success: function(response) {
+
+                    console.log(response);
                     var json = response.body;
                     var dataSet = [];
 
                     for (var i = 0; i < json.length; i++) {
                         var sub_array = {
-                            'nama_lengkap': json[i].nama_lengkap,
-                            'email': json[i].email,
-                            'pekerjaan': json[i].pekerjaan,
-                            'posisi': json[i].posisi,
+                            'id': json[i].id,
+                            'user': json[i].user_name,
+                            'skill_name': json[i].skill_name,
+                            'rating': json[i].rating,
+                            'description': json[i].description,
                             'action': '<button onclick="showOne(' + json[i].id + ')" class="btn btn-sm btn-warning mr-1">Edit</button>' +
                                 '<button onclick="deleteOne(' + json[i].id + ')" class="btn btn-sm btn-danger ml-1">Delete</button>'
                         };
@@ -138,16 +143,19 @@ if (!isset($_SESSION['user'])) {
                     $('#sample_data').DataTable({
                         data: dataSet,
                         columns: [{
-                                data: "nama_lengkap"
+                                data: "id"
                             },
                             {
-                                data: "email"
+                                data: "user"
                             },
                             {
-                                data: "pekerjaan"
+                                data: "skill_name"
                             },
                             {
-                                data: "posisi"
+                                data: "rating"
+                            },
+                            {
+                                data: "description"
                             },
                             {
                                 data: "action"
@@ -162,6 +170,5 @@ if (!isset($_SESSION['user'])) {
             });
         }
     </script>
-</body>
 
-</html>
+</body>
